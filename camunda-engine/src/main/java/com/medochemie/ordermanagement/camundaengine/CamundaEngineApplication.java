@@ -4,12 +4,11 @@ import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableProcessApplication
 @EnableConfigurationProperties
-@EnableEurekaClient
+//@EnableEurekaClient
 public class CamundaEngineApplication {
 
 	public static void main(String[] args) {

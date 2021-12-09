@@ -16,10 +16,8 @@
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 		<camunda-bpm-spring-boot-starter.version>2.1.2</camunda-bpm-spring-boot-starter.version>
-		<spring-cloud.version>2020.0.4</spring-cloud.version>
+<!--		<spring-cloud.version>2020.0.4</spring-cloud.version>-->
 	</properties>
-
-
 
 	<dependencyManagement>
 		<dependencies>
@@ -31,13 +29,13 @@
 				<scope>import</scope>
 			</dependency>
 
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.springframework.cloud</groupId>-->
+<!--				<artifactId>spring-cloud-dependencies</artifactId>-->
+<!--				<version>${spring-cloud.version}</version>-->
+<!--				<type>pom</type>-->
+<!--				<scope>import</scope>-->
+<!--			</dependency>-->
 
 			<dependency>
 				<groupId>org.camunda.bpm</groupId>
@@ -51,10 +49,10 @@
 
 	<dependencies>
 
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.camunda.bpm.springboot</groupId>
