@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1fq59me" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="AgentOrder" name="AgentOrder" isExecutable="true" camunda:versionTag="1.0">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="checked" value="${checked}" />
+        <camunda:property name="assigneegroup" value="${assigneegroup}" />
+        <camunda:property name="assignee" value="${assignee}" />
+        <camunda:property name="requestor" value="${requestor}" />
+        <camunda:property name="stepName" value="${stepName}" />
+        <camunda:property name="approver" value="${approver}" />
+        <camunda:property name="orderNumber" value="${orderNumber}" />
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="OrderPlaced" name="Order Placed">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="country" label="Country" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+            <camunda:value id="ethiopia" name="Ethiopia" />
+            <camunda:value id="kenya" name="Kenya" />
+            <camunda:value id="other" name="Other" />
+          </camunda:formField>
+          <camunda:formField id="agent" label="Agent Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="item1" label="Item 1" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+            <camunda:value id="item1" name="Item 1" />
+          </camunda:formField>
+          <camunda:formField id="qty" label="Quantity" type="long">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_0epnfcf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0epnfcf" sourceRef="OrderPlaced" targetRef="CheckOrder" />
+    <bpmn:userTask id="CheckOrder" name="Check Order" camunda:assignee="${ currentUser() }">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="assigneegroup">${assigneegroup}</camunda:outputParameter>
+          <camunda:outputParameter name="assignee">${assignee}</camunda:outputParameter>
+          <camunda:outputParameter name="status">${status}</camunda:outputParameter>
+          <camunda:outputParameter name="checked">${checked}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0epnfcf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mllnhj</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0mllnhj" sourceRef="CheckOrder" targetRef="Deploy" />
+    <bpmn:endEvent id="Event_1g1sb1v">
+      <bpmn:incoming>Flow_14egbde</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_14egbde" sourceRef="Deploy" targetRef="Event_1g1sb1v" />
+    <bpmn:userTask id="Deploy" name="Deploy" camunda:assignee="`${ currentUser() }`">
+      <bpmn:incoming>Flow_0mllnhj</bpmn:incoming>
+      <bpmn:outgoing>Flow_14egbde</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="AgentOrder">
+      <bpmndi:BPMNEdge id="Flow_0epnfcf_di" bpmnElement="Flow_0epnfcf">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mllnhj_di" bpmnElement="Flow_0mllnhj">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="430" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14egbde_di" bpmnElement="Flow_14egbde">
+        <di:waypoint x="530" y="117" />
+        <di:waypoint x="592" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="OrderPlaced">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="165" y="142" width="65" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1p54nf8_di" bpmnElement="CheckOrder">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1g1sb1v_di" bpmnElement="Event_1g1sb1v">
+        <dc:Bounds x="592" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15ragz6_di" bpmnElement="Deploy">
+        <dc:Bounds x="430" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
