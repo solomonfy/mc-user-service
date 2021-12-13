@@ -13,7 +13,7 @@ import java.util.Date;
 public class Agent {
     @Id
     private String id;
-    private String fullName;
+    private String agentName;
     private Address address;
     private String countryId;
     private boolean active;
