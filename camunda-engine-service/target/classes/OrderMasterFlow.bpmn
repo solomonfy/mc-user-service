@@ -5,7 +5,7 @@
       <bpmn:outgoing>Flow_17jnnxx</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_17jnnxx" sourceRef="StartEvent_1" targetRef="Activity_1o4zdmm" />
-    <bpmn:exclusiveGateway id="Gateway_0bujmp2" name="Do we have items ?">
+    <bpmn:exclusiveGateway id="Gateway_0bujmp2" name="Stock available ?">
       <bpmn:incoming>Flow_10zfipd</bpmn:incoming>
       <bpmn:outgoing>Flow_073gyr3</bpmn:outgoing>
       <bpmn:outgoing>Flow_1tk8c0s</bpmn:outgoing>
@@ -19,15 +19,13 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0w3e15s" sourceRef="Activity_1e6yaoi" targetRef="Gateway_1jzvwxi" />
     <bpmn:sequenceFlow id="Flow_0995iq9" sourceRef="Activity_109utyn" targetRef="Gateway_0fjryzm" />
-    <bpmn:exclusiveGateway id="Gateway_0tkju69">
+    <bpmn:exclusiveGateway id="Gateway_0tkju69" default="Flow_050s43o">
       <bpmn:incoming>Flow_02o2vh3</bpmn:incoming>
       <bpmn:outgoing>Flow_050s43o</bpmn:outgoing>
       <bpmn:outgoing>Flow_199qhjk</bpmn:outgoing>
       <bpmn:outgoing>Flow_1sasszt</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_050s43o" name="Yes" sourceRef="Gateway_0tkju69" targetRef="Gateway_0n01pb2">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${LC &amp;&amp; validLC}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_050s43o" name="Yes" sourceRef="Gateway_0tkju69" targetRef="Gateway_0n01pb2" />
     <bpmn:sequenceFlow id="Flow_199qhjk" name="LC not issued" sourceRef="Gateway_0tkju69" targetRef="Activity_1o4zdmm">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!LC}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -53,7 +51,7 @@
     </bpmn:parallelGateway>
     <bpmn:sequenceFlow id="Flow_0duaj6a" sourceRef="Gateway_0n01pb2" targetRef="Activity_127r1cz" />
     <bpmn:sequenceFlow id="Flow_1sasszt" name="Amendment needed" sourceRef="Gateway_0tkju69" targetRef="Activity_1iqhq05">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!valid}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!valid || !LC}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="Activity_1iqhq05" name="Send to Agent for the same">
       <bpmn:incoming>Flow_1sasszt</bpmn:incoming>
@@ -108,18 +106,6 @@
     <bpmn:userTask id="Activity_0dfbkuq" name="Send Notification, Available items &#38; Promised date">
       <bpmn:incoming>Flow_1tk8c0s</bpmn:incoming>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_1e6yaoi" name="Generate proforma">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="paymentModality" label="Payment type:" type="enum">
-            <camunda:value id="LC" name="LC" />
-            <camunda:value id="other" name="Other" />
-          </camunda:formField>
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_09fezpu</bpmn:incoming>
-      <bpmn:outgoing>Flow_0w3e15s</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:userTask id="Activity_02v1ib0" name="Notify Production Dep&#39;t &#38; set production status Pending">
       <bpmn:incoming>Flow_0wh473o</bpmn:incoming>
       <bpmn:outgoing>Flow_0e8v98d</bpmn:outgoing>
@@ -164,6 +150,10 @@
       <bpmn:incoming>Flow_18vn6n1</bpmn:incoming>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_18vn6n1" sourceRef="Activity_1iqhq05" targetRef="Activity_0rotxjh" />
+    <bpmn:serviceTask id="Activity_1e6yaoi" name="Generate proforma" camunda:delegateExpression="#{GenerateProforma}">
+      <bpmn:incoming>Flow_09fezpu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0w3e15s</bpmn:outgoing>
+    </bpmn:serviceTask>
     <bpmn:textAnnotation id="TextAnnotation_1fcwlfv">
       <bpmn:text>Valid LC Issued ?</bpmn:text>
     </bpmn:textAnnotation>
@@ -315,7 +305,7 @@
       <bpmndi:BPMNShape id="Gateway_0bujmp2_di" bpmnElement="Gateway_0bujmp2" isMarkerVisible="true">
         <dc:Bounds x="455" y="232" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="436" y="202" width="88" height="27" />
+          <dc:Bounds x="438" y="202" width="84" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0tkju69_di" bpmnElement="Gateway_0tkju69" isMarkerVisible="true">
@@ -366,9 +356,6 @@
       <bpmndi:BPMNShape id="Activity_14oil7v_di" bpmnElement="Activity_0dfbkuq">
         <dc:Bounds x="580" y="360" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_01arm4d_di" bpmnElement="Activity_1e6yaoi">
-        <dc:Bounds x="810" y="217" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1lkamvu_di" bpmnElement="Activity_02v1ib0">
         <dc:Bounds x="810" y="330" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -389,6 +376,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_1fcwlfv_di" bpmnElement="TextAnnotation_1fcwlfv">
         <dc:Bounds x="1260" y="170" width="80" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pe8w8h_di" bpmnElement="Activity_1e6yaoi">
+        <dc:Bounds x="810" y="217" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0m869w3_di" bpmnElement="Event_1j3u6i4">
         <dc:Bounds x="1112" y="239" width="36" height="36" />

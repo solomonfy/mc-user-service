@@ -4,6 +4,9 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import javax.inject.Named;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 @Named("GenerateProforma")
@@ -14,7 +17,21 @@ public class GenerateProforma implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        LOGGER.info("The proforma order was '" + execution.getVariable("action") + "'" + " by " +  execution.getVariable("approver")  + "." );
-        System.out.println("Inside GenerateProforma class!");
+        String country = (String) execution.getVariable("country");
+        String agent = (String) execution.getVariable("agent");
+        String item = (String) execution.getVariable("item");
+        String action = (String) execution.getVariable("action");
+        String approver = (String) execution.getVariable("approver");
+        Long qty = (Long) execution.getVariable("qty");
+        String proformaDate = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH).format(LocalDateTime.now());
+
+
+
+        LOGGER.info("Inside GenerateProforma class!" );
+        System.out.println("Country: " + country);
+        System.out.println("Agent: " + agent);
+        System.out.println("Item: " + item);
+        System.out.println("Quantity: " + qty);
+        System.out.println("Date: " + proformaDate);
     }
 }

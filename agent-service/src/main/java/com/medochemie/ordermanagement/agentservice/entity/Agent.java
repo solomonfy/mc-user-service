@@ -14,6 +14,7 @@ public class Agent {
     @Id
     private String id;
     private String agentName;
+    private String agentCode;
     private Address address;
     private String countryId;
     private boolean active;

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -37,51 +38,40 @@ public class AgentController {
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
-//    @GetMapping("/")
-//    public ResponseEntity<List<Agent>> getAllAgents(@RequestParam(required = false) String fullName){
-//
-//        try {
-//            List<Agent> agents = new ArrayList<Agent>();
-//            if (fullName == null) {
-//                repository.findAll().forEach(agents::add);
-//                return new ResponseEntity(agents, HttpStatus.OK);
-//            }
-//            else if (agents.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//            else {
-//                repository.findAgentByName(fullName).forEach(agents::add);
-//                return new ResponseEntity(agents, HttpStatus.OK);
-//            }
-//        } catch (Exception e){
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Agent> getAgentById(@PathVariable String id){
         return new ResponseEntity(repository.findById(id), HttpStatus.OK);
-
     }
 
     @PostMapping("/add_agent")
     public ResponseEntity<Agent> addNewAgent(@RequestBody Agent agent){
         try{
-            if(agent.getAddress() != null ){
+            if(agent.getAddress() != null && agent.getAgentName() != null){
                 agent.setCreatedOn(new Date());
+                agent.setAgentCode(generateAgentCode(agent.getAgentName(), agent.getCountryId()));
                 agent.setCountryId(agent.getAddress().getCountry());
                 Agent _agent = repository.save(agent);
                 return new ResponseEntity(_agent, HttpStatus.CREATED);
             }
             else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    public String generateAgentCode(String agentName, String countryName) {
+//        generate UUID
+        UUID temp = UUID.randomUUID();
+        String uuidString = Long.toHexString(temp.getMostSignificantBits())
+                + Long.toHexString(temp.getLeastSignificantBits());
+
+        String agentPrefix = agentName.length() < 2 ? agentName : agentName.substring(0, 2);
+        String countryPrefix = countryName.length() < 2 ? countryName : countryName.substring(0, 2);;
+        return agentPrefix + countryPrefix + uuidString;
     }
 
 }

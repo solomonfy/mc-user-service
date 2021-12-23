@@ -9,5 +9,6 @@ public class Agent {
 
     private String agentId;
     private String agentName;
+    private String agentCode;
     private List<String> orders;
 }
