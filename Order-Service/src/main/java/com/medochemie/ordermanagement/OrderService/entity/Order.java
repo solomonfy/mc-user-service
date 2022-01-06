@@ -21,7 +21,8 @@ public class Order {
     private String orderNumber;
     private Double amount;
     private String shipment;
-    private List<String> productIds;
+//    private List<String> productIds;
+    private List<Product> products;
 
     @JsonIgnore
     @LastModifiedDate

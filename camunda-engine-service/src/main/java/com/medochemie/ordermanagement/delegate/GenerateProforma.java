@@ -26,7 +26,6 @@ public class GenerateProforma implements JavaDelegate {
         String proformaDate = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH).format(LocalDateTime.now());
 
 
-
         LOGGER.info("Inside GenerateProforma class!" );
         System.out.println("Country: " + country);
         System.out.println("Agent: " + agent);

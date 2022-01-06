@@ -1,14 +1,18 @@
 package com.medochemie.ordermanagement.OrderService.repository;
 
 import com.medochemie.ordermanagement.OrderService.entity.Order;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Repository;
+import org.springframework.retry.annotation.Retryable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -26,4 +30,9 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 
         return response;
     };
+
+    @Retryable(value = {OptimisticLockingFailureException.class}, maxAttempts = 20, backoff = @Backoff(delay = 2000))
+    Order updateOrder(Order order);
+
+    java.util.Optional<List<Order>> getOrderListByIdList(List<String> idList);
 }

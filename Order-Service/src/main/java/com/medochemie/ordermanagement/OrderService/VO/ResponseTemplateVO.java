@@ -9,5 +9,5 @@ import java.util.List;
 @Data
 public class ResponseTemplateVO {
     private Order order;
-    private Product product;
+    private List<Product> products;
 }

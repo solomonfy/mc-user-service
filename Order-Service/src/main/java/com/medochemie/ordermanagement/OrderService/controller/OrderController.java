@@ -56,17 +56,41 @@ public class OrderController {
         Order order = optionalEntity.get();
 
         List<Product> productList = new ArrayList<>();
-        List<String> productIds = order.getProductIds();
+        List<Product> listOfProducts = order.getProducts();
+
+        List<String> productIds = new ArrayList<>();
+
+
+        for (Product product : listOfProducts)
+        {
+            String prodId = product.getProductId();
+            productIds.add(prodId);
+
+        }
+        System.out.println(listOfProducts);
+        System.out.println(productIds);
+
 
         int index = 0;
         Double total = 0D;
         for (String productId : productIds)
         {
             Product product = restTemplate.getForObject("http://MC-COMPANY-SERVICE/products/" + productId, Product.class);
+            product.setProductId(productId);
             productList.add(product);
-            total += product.getUnitPrice();
+
+            total += (product.getUnitPrice() * product.getQuantity());
         }
-        System.out.println(productList);
+        order.setAmount(total);
+        System.out.println("Total amount: " + total);
+
+//        vo.setOrder(order);
+//        vo.setProducts(productList);
+//        System.out.println("VO object: " + vo);
+
+        for (Product pro : productList){
+        }
+
 
         try{
             return new ResponseEntity(productList, HttpStatus.OK);
@@ -100,7 +124,7 @@ public class OrderController {
         if (foundOrder.isPresent()){
             Order updatedOrder = foundOrder.get();
             updatedOrder.setAmount(order.getAmount());
-            updatedOrder.setProductIds(order.getProductIds());
+            updatedOrder.setProducts(order.getProducts());
             updatedOrder.setShipment(order.getShipment());
             updatedOrder.setCreatedOn(order.getCreatedOn());
             return new ResponseEntity(repository.save(order), HttpStatus.OK);
@@ -117,4 +141,29 @@ public class OrderController {
     }
 
 
+    @PutMapping("/{update/{id}")
+    public ResponseEntity<?> updateOrder(@RequestBody Order order){
+        try {
+            Order updatedOrder = repository.updateOrder(order);
+            return new ResponseEntity<>(updatedOrder, null, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getAllOrdersByIdList")
+    public ResponseEntity<List<Order>> getAllOrderByOrderIdList(@RequestParam("orderIdList") List<String> orderIdList) {
+        try {
+            List<Order> orderListToBeReturned = new ArrayList<Order>();
+            java.util.Optional<List<Order>> fetchedOrderList = repository.getOrderListByIdList(orderIdList);
+
+            if (fetchedOrderList.isPresent()){
+                orderListToBeReturned.addAll(fetchedOrderList.get());
+            }
+
+            return new ResponseEntity(orderListToBeReturned, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
