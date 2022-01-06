@@ -1,6 +1,7 @@
 package com.medochemie.ordermanagement.company.controller;
 
 import com.medochemie.ordermanagement.company.entity.Product;
+import com.medochemie.ordermanagement.company.entity.Response;
 import com.medochemie.ordermanagement.company.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -10,9 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
+
+import static com.google.common.collect.ImmutableMap.of;
+import static java.time.LocalDateTime.now;
 
 
 @Controller
@@ -24,21 +28,67 @@ public class ProductController {
     @Autowired
     private ProductRepository repository;
 
-    @GetMapping("/")
-    public ResponseEntity<List<Product>> getAllProducts(){
-        log.info("Returning all products");
-        return new ResponseEntity(repository.findAll(), HttpStatus.OK);
+
+    @GetMapping("/list")
+    public ResponseEntity<Response> getAllProducts(){
+        log.info("Retrieving all products");
+        List<Product> foundProducts = repository.findAll();
+        int productCount = foundProducts.toArray().length;
+        return ResponseEntity.ok(
+              Response.builder()
+                      .timeStamp(now())
+                      .message(productCount == 1 ? "One product retrieved" :"(" + productCount + ")"+ " products retrieved!")
+                      .status(HttpStatus.OK)
+                      .statusCode(HttpStatus.OK.value())
+                      .data(of("Products", foundProducts))
+                      .build()
+        );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id){
-        log.info("Returning a product with id" + id);
-        Optional<Product> optionProduct = repository.findById(id);
-        Product product = optionProduct.get();
-        System.out.println(product);
-        return new ResponseEntity(product, HttpStatus.OK);
+    @GetMapping("/find/{id}")
+    public ResponseEntity<Response> getProductById(@PathVariable("id") String id){
+        log.info("Retrieving a product with id" + id);
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .message("Product retrieved with id " + id)
+                        .status(HttpStatus.OK)
+                        .statusCode(HttpStatus.OK.value())
+                        .data(of("Product", repository.findProductById(id)))
+                        .build()
+        );
     }
 
+    @GetMapping("/find/{id}/detail")
+    public ResponseEntity<Response> getProductByIdWithSpecificValues(@PathVariable("id") String id){
+        log.info("Retrieving a product with id" + id);
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .message("Product retrieved with id " + id)
+                        .status(HttpStatus.OK)
+                        .statusCode(HttpStatus.OK.value())
+                        .data(of("Product", repository.findById(id)))
+                        .build()
+        );
+    }
+
+    @PostMapping("/addProduct")
+    public ResponseEntity<Response> addProduct(@RequestBody Product product){
+        log.info("Adding " + product.getBrandName());
+        Date creationDate = new Date();
+        product.setCreatedOn(creationDate);
+        product.setCreatedBy("Solomon");
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .message(product.getBrandName() + " "+ product.getStrength()+ product.getFormulation() + " is added!")
+                        .status(HttpStatus.CREATED)
+                        .statusCode(HttpStatus.CREATED.value())
+                        .data(of("Product", repository.save(product)))
+                        .build()
+        );
+    }
 
 
     @GetMapping("/findAllById/{ids}")
@@ -66,9 +116,23 @@ public class ProductController {
         }
     };
 
-    @PostMapping("/addProduct")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product){
-        log.info("Adding new product with brand name" + product.getBrandName() );
-        return new ResponseEntity(repository.save(product), HttpStatus.CREATED);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Response> inactivateProduct(@PathVariable("id") String id){
+        Product foundProduct = repository.findById(id).get();
+
+        if (foundProduct != null & !foundProduct.isActive()) {
+            foundProduct.setActive(false);
+        }
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .message(!foundProduct.isActive() ? "Product is inactivated" : "Product inactivation failed")
+                        .status(HttpStatus.OK)
+                        .statusCode(HttpStatus.OK.value())
+                        .data(of("Product", repository.save(foundProduct)))
+                        .build()
+        );
     }
+
+
 }
