@@ -31,8 +31,4 @@ public interface OrderRepository extends MongoRepository<Order, String> {
         return response;
     };
 
-    @Retryable(value = {OptimisticLockingFailureException.class}, maxAttempts = 20, backoff = @Backoff(delay = 2000))
-    Order updateOrder(Order order);
-
-    java.util.Optional<List<Order>> getOrderListByIdList(List<String> idList);
 }
