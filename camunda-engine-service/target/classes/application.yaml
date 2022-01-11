@@ -9,7 +9,7 @@ camunda.bpm:
     create: All tasks
 
 server:
-  port: 9090
+  port: 2323
 
 
 spring:
@@ -30,11 +30,11 @@ spring:
 
 
 
-#eureka:
-#  client:
-#    register-with-eureka: true
-#    fetch-registry: true
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka
-#    instance:
-#      hostname: localhost
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    instance:
+      hostname: localhost
