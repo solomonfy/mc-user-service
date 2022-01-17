@@ -16,49 +16,34 @@ function App() {
   // similar to componentDidMount()
   useEffect(() => {
     fetch(`${baseUrl}/products/list`, {
-      method: "GET"
+      method: "GET",
     })
       .then((resp) => resp.json())
-      .then(
-        (result) => {
 
-          // setTimeout(() => {}, 3000);
-          setIsLoaded(true);
-          setAppState(result);
-          // console.log(result)
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      );
+      .then((appState) => {
+        setTimeout(() => {}, 3000);
+        setAppState(appState);
+        setIsLoaded(true);
+      })
+      //   // Note: it's important to handle errors here
+      //   // instead of a catch() block so that we don't swallow
+      //   // exceptions from actual bugs in components.
+      .catch((error) => {
+        setIsLoaded(false);
+        setError(error);
+      });
   }, []);
-  
 
-  const productsList = [
-    { id: 1, name: "Dapril", strength: "5mg" },
-    { id: 2, name: "Brot", strength: "500mg" },
-    { id: 3, name: "Almiral", strength: "100mg" },
-  ];
+  // console.log(appState);
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
-    return <div>Loading...</div>;
-  } else {
+  if (isLoaded) {
     return (
       <Container className="my-4">
-        <ProductsContainer
-          productsList={productsList}
-          appState={appState}
-        ></ProductsContainer>
+        <ProductsContainer appState={appState}></ProductsContainer>
         <div></div>
       </Container>
     );
-  }
+  } else return <div>Error: {error}</div>;
 }
 
 export default App;
