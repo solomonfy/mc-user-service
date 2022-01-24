@@ -1,0 +1,14 @@
+.Order {
+}
+
+tr {
+  height: 40px;
+  width: 160px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.order-count{
+    text-align: center;
+    margin-bottom: 10px;
+}

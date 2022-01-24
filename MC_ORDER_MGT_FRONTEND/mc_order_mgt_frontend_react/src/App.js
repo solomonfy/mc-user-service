@@ -2,6 +2,8 @@ import { Container } from "react-bootstrap";
 import ProductsContainer from "./container/ProductsContainer";
 // import AgentsContainer from "./container/AgentsContainer";
 import React, { useState, useEffect } from "react";
+import HeaderBar from "./components/HeaderBar";
+import HomePage from "./components/HomePage";
 
 import "./App.css";
 
@@ -21,7 +23,7 @@ function App() {
       .then((resp) => resp.json())
 
       .then((appState) => {
-        setTimeout(() => {}, 3000);
+        setTimeout(() => {}, 500);
         setAppState(appState);
         setIsLoaded(true);
       })
@@ -34,16 +36,21 @@ function App() {
       });
   }, []);
 
-  // console.log(appState);
 
   if (isLoaded) {
     return (
-      <Container className="my-4">
-        <ProductsContainer appState={appState}></ProductsContainer>
-        <div></div>
-      </Container>
+      <>
+        <HeaderBar></HeaderBar>
+        <Container className="my-1">
+          <HomePage></HomePage>
+          <Container className="my-4">
+            <ProductsContainer appState={appState}></ProductsContainer>
+            <div></div>
+          </Container>
+        </Container>
+      </>
     );
-  } else return <div>Error: {error}</div>;
+  } else return <div>Loading data: {error}</div>;
 }
 
 export default App;

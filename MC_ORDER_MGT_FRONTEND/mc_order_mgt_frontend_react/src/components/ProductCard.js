@@ -4,8 +4,8 @@ import { Stack, Card } from "react-bootstrap";
 function ProductCard({ product }) {
   return (
     <div>
-      <Stack direction="vertical" className="mb-4" gap={4}>
-        <Card>
+      <Stack direction="vertical" className="mb-4" gap={8}>
+        <Card >
           <Card.Body>
             <Card.Title className="d-flex justify-content-between align-items-baseline fw-normal mb-3">
               <div className="me-2">{product.brandName.toUpperCase() + "/" + product.genericName}</div>
