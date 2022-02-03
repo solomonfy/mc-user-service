@@ -56,6 +56,20 @@
 			<version>5.4.5</version>
 		</dependency>
 
+<!--		a library used to generate jwt token -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.18.3</version>
+		</dependency>
+
+		<!-- dependency for strings, like to check if string is not null or empty -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
+		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

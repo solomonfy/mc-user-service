@@ -26,7 +26,6 @@ public class UserPrincipal implements UserDetails {
             listOfGrants.add(simpleGrantedAuthority);
         }
         return listOfGrants;
-
     }
 
     @Override

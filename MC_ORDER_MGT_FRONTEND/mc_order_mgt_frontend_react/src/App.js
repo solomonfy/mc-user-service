@@ -2,7 +2,7 @@ import { Container } from "react-bootstrap";
 import ProductsContainer from "./container/ProductsContainer";
 // import AgentsContainer from "./container/AgentsContainer";
 import React, { useState, useEffect } from "react";
-import HeaderBar from "./components/HeaderBar";
+import NavBar from "./components/NavBar";
 import HomePage from "./components/HomePage";
 
 import "./App.css";
@@ -12,6 +12,7 @@ function App() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [appState, setAppState] = useState({});
+  const [orders, setOrders] = useState([]);
 
   // Note: the empty deps array [] means
   // this useEffect will run once
@@ -21,9 +22,8 @@ function App() {
       method: "GET",
     })
       .then((resp) => resp.json())
-
       .then((appState) => {
-        setTimeout(() => {}, 500);
+        // setTimeout(() => {}, 500);
         setAppState(appState);
         setIsLoaded(true);
       })
@@ -31,26 +31,36 @@ function App() {
       //   // instead of a catch() block so that we don't swallow
       //   // exceptions from actual bugs in components.
       .catch((error) => {
+        // console.log(error);
         setIsLoaded(false);
         setError(error);
       });
   }, []);
 
-
+  if (!isLoaded) {
+    return (
+      <>
+        <NavBar></NavBar>
+        <HomePage></HomePage>
+        {/* <div>Some error occured</div>
+        {error.message} */}
+      </>
+    );
+  }
   if (isLoaded) {
     return (
       <>
-        <HeaderBar></HeaderBar>
+        <NavBar></NavBar>
         <Container className="my-1">
           <HomePage></HomePage>
-          <Container className="my-4">
-            <ProductsContainer appState={appState}></ProductsContainer>
-            <div></div>
-          </Container>
+          <ProductsContainer
+            className="card-list"
+            appState={appState}
+          ></ProductsContainer>
         </Container>
       </>
     );
-  } else return <div>Loading data: {error}</div>;
+  }
 }
 
 export default App;

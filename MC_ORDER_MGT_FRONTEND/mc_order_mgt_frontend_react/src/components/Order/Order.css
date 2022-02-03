@@ -8,7 +8,13 @@ tr {
   vertical-align: middle;
 }
 
-.order-count{
-    text-align: center;
-    margin-bottom: 10px;
+.order-count {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.homepage--btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

@@ -1,4 +1,7 @@
 
+jwt:
+  secrete: '[z0-qtganhdvkiq4576._=-]%6^bsvjsnbfavcdb#4fcf@5%7&1!23bakjysvjmi'
+
 server:
   port: 2025
 

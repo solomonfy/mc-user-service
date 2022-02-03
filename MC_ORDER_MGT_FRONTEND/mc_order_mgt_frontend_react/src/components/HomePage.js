@@ -12,57 +12,54 @@ export default function HomePage() {
     { agentName: "Test", status: "Completed", amount: 130000 },
   ];
 
-  function greetings() {
-    let millitaryTime = new Date().toLocaleTimeString("local", {
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-    });
+  
+  let timeOfDay;
+  const date = new Date();
+  const hours = date.getHours();
 
-    let n = millitaryTime.split(":")[0];
-
-    if (n >= 0 && n < 12) {
-      return "Good morning, ";
-    } else if (n >= 12 && n < 19) {
-      return "Good afternoon, ";
-    } else {
-      return "Good evening, ";
-    }
+  if (hours < 12) {
+    timeOfDay = "Good morning, ";
+  } else if (hours >= 12 && hours < 17) {
+    timeOfDay = "Good afternoon, ";
+  } else {
+    timeOfDay = "Good evening, ";
   }
+  
 
-  function myClock() {
-    setTimeout(function () {
-      const d = new Date();
-      const n = d.toLocaleTimeString();
-      document.getElementById("current_time").innerHTML = n;
-      myClock();
-    }, 500);
-  }
-  myClock();
+  // function myClock() {
+  //   setTimeout(function () {
+  //     const d = new Date();
+  //     const n = d.toLocaleTimeString();
+  //     document.getElementById("current_time").innerHTML = n;
+  //     myClock();
+  //   }, 0);
+  // }
+  // myClock();
 
   return (
-    <div class="container-sm">
+    <div className="container-sm">
       <br />
       <br />
-
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">{greetings()} Solomon</h5>
-              <h5 id="current_time"></h5>
-              <p class="card-text">
+      <div className="row">
+        <div className="col-sm-6 ">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">{timeOfDay} Solomon</h5>
+              {/* <h5 id="current_time"></h5> */}
+              <p className="card-text">
                 With supporting text below as a natural lead-in to additional
                 content.
               </p>
-              <a href="#" class="btn btn-primary">
-                Place an Order
-              </a>
-              <span>
-                <a href="#" class="btn btn-primary">
-                  Check Order
+              <div className="homepage--btns">
+                <a href="#" className="btn btn-primary">
+                  Place an Order
                 </a>
-              </span>
+                <span>
+                  <a href="#" className="btn btn-primary">
+                    Check Order
+                  </a>
+                </span>
+              </div>
             </div>
           </div>
         </div>
