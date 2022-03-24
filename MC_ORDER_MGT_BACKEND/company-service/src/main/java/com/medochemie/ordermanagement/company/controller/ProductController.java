@@ -18,7 +18,7 @@ import static java.time.LocalDateTime.now;
 
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/api/v1/products")
 @CrossOrigin(origins = {"http://localhost:4200/", "http://localhost:3000/"})
 public class ProductController {
 

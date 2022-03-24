@@ -14,7 +14,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/sites")
+@RequestMapping("/api/v1/sites")
 public class SiteController {
 
     private static final Logger logger = (Logger) LogManager.getLogger(SiteController.class);
@@ -22,19 +22,19 @@ public class SiteController {
     @Autowired
     private SiteRepository repository;
 
-    @GetMapping("")
+    @GetMapping("/list")
     public ResponseEntity<List<Site>> getAllSites(){
         logger.info("Inside SiteController getAllSites method!");
         logger.debug(Object::new);
         return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{siteName}")
+    @GetMapping("/list/{siteName}")
     public ResponseEntity<Site> getSiteByName(@PathVariable String siteName){
         return new ResponseEntity(repository.findBySiteName(siteName), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/list/{id}")
     public ResponseEntity<Site> getSiteById(@PathVariable String id){
         return new ResponseEntity(repository.findById(id), HttpStatus.OK);
     }
@@ -45,12 +45,12 @@ public class SiteController {
 
     }
 
-    @PostMapping("/addSite")
+    @PostMapping("/add-site")
     public ResponseEntity<Site> addNewSite(@RequestBody Site site){
         return new ResponseEntity<>(repository.save(site), HttpStatus.CREATED);
     }
 
-    @PostMapping("/addSites")
+    @PostMapping("/add-sites")
     public ResponseEntity<List<Site>> addSites(@RequestBody List<Site> sites){
         return new ResponseEntity<>(repository.saveAll(sites), HttpStatus.CREATED);
     }

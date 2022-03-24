@@ -11,29 +11,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/company")
+@RequestMapping("/api/v1/company")
 @Slf4j
 public class CompanyController {
     @Autowired
     public CompanyRepository repository;
 
-    @GetMapping("")
+    @GetMapping("/list")
     public ResponseEntity<List<Company>> getAllCompanies(){
         log.info("Getting all companies");
         return new ResponseEntity(repository.findAll(), HttpStatus.OK);
     }
-    @GetMapping("/{id}")
+    @GetMapping("/list/{id}")
     public ResponseEntity<Company> getCompanyById(@PathVariable String id){
         log.info("Getting one company by ID");
         return new ResponseEntity(repository.findById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add-company")
     public ResponseEntity<Company> addNew(@RequestBody Company company){
         return new ResponseEntity(repository.save(company), HttpStatus.CREATED);
     }
 
-    @GetMapping("/getByAddress/{city}")
+    @GetMapping("/get-by-address/{city}")
     public  ResponseEntity<List<Company>> getCompanyByAddress(@PathVariable String city){
         return new ResponseEntity(repository.findByCity(city), HttpStatus.OK);
     }
