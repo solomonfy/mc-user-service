@@ -1,0 +1,32 @@
+.Order {
+}
+
+
+.order-summary{
+  position: relative;
+  /* padding: 20px; */
+  /* align-self: right; */
+  /* background: #373838; */
+
+}
+tr {
+  height: 40px;
+  width: 160px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.order-count {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.homepage--btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table{
+  height: 80px;
+}

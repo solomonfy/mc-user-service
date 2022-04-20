@@ -1,0 +1,5 @@
+{
+    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorBlinking": "phase",
+    "editor.fontFamily": "Monaco, 'Courier New', monospace"
+}

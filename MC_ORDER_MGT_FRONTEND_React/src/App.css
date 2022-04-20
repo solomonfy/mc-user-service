@@ -1,0 +1,51 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+}
+
+.container {
+}
+
+.card-list {
+  padding: 20px;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  gap: 30px;
+  overflow-x: auto;
+  align-items: center;
+  flex-flow: row wrap;
+  position: relative;
+  width: auto;
+  /* background: gray none repeat scroll 0 0; */
+  /* background:  rgb(29, 25, 47); */
+}
+
+.navbar {
+  height: 100px;
+  font-size: 1.5rem;
+  padding-left: 20px;
+  background: rgb(29, 25, 47);
+}
+
+
+
+.home-page {
+  padding-top: 20px;
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.greeting-card {
+  min-height: 150px;
+  background: #121213;
+  outline: none;
+  border-radius: 5px;
+}
+
+
+.sweet-loading {
+  padding-top:300px;
+}
