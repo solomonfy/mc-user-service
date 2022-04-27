@@ -1,5 +1,6 @@
 //package com.medochemie.ordermanagement.usersservice.utility;
 //
+//import lombok.RequiredArgsConstructor;
 //import org.apache.commons.lang.StringUtils;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.web.filter.OncePerRequestFilter;
@@ -14,13 +15,14 @@
 //import static com.medochemie.ordermanagement.usersservice.constant.SecurityConstant.TOKEN_PREFIX;
 //import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 //
+//@RequiredArgsConstructor
 //public class JWTAuthorizationFilter extends OncePerRequestFilter {
 //
-//    private JWTTokenProvider jwtTokenProvider;
+//    private final JWTTokenProvider jwtTokenProvider;
 //
-//    public JWTAuthorizationFilter(JWTTokenProvider jwtTokenProvider) {
-//        this.jwtTokenProvider = jwtTokenProvider;
-//    }
+////    public JWTAuthorizationFilter(JWTTokenProvider jwtTokenProvider) {
+////        this.jwtTokenProvider = jwtTokenProvider;
+////    }
 //
 //    @Override
 //    protected void doFilterInternal(

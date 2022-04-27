@@ -6,11 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,5 +32,12 @@ public class RoleController {
         Optional<Role> role = roleService.findRoleById(id);
         log.info("Fetching {} role", role.get().getRoleName());
         return new ResponseEntity(role, HttpStatus.OK);
+    }
+
+    @PostMapping("/add-role")
+    public ResponseEntity<Role> addNewRole(@RequestBody Role role){
+        log.info("Adding new role to db");
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/roles/add-role").toUriString());
+        return ResponseEntity.created(uri).body(roleService.addRole(role));
     }
 }

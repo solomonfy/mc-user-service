@@ -7,20 +7,23 @@ import com.medochemie.ordermanagement.usersservice.repository.RoleRepository;
 import com.medochemie.ordermanagement.usersservice.repository.UserRepository;
 import com.medochemie.ordermanagement.usersservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-//@Transactional
-
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final static Logger logger = LoggerFactory.getLogger(Agent.class);
     private final String agentUrl = "http://MC-AGENT-SERVICE/api/v1/agents/list/";
@@ -29,68 +32,95 @@ public class UserServiceImpl implements UserService {
     private final RestTemplate restTemplate;
 
     @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(userName);
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        if (user == null) {
+            logger.error("User {} not found in database", userName);
+            throw new UsernameNotFoundException("User not found in database");
+        } else {
+            logger.info("User {} not found in database", userName);
+            user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
+        }
+        return new org.springframework.security.core.userdetails.User(
+                userName,
+                user.getPassword(),
+                authorities);
+    }
+
+    @Override
     public User addNewUser(User user) {
         logger.info("Adding {} {} to database", user.getFirstName(), user.getLastName());
-        try {
+        User existingUser = userRepository.findByUserName(user.getUserName().trim());
+        if (existingUser == null) {
+            user.setId(null);
+            user.setActive(true);
+            user.setCreatedOn(new Date());
+            user.setUpdatedOn(new Date());
             return userRepository.save(user);
+        } else {
+            return new User();
         }
-        catch (Exception e) {
-            logger.info(e.getMessage());
-            throw e;
-        }
-
+//        return userRepository.save(user);
     }
 
 
     @Override
     public void addRoleToUser(String userName, String roleName) {
-        Optional<User> user = userRepository.findByUserName(userName);
-        logger.info(user.get().getUserName());
+        User user = userRepository.findByUserName(userName);
+        logger.info(user.getUserName());
         Role role = roleRepository.findByRoleName(roleName);
         logger.info(role.getRoleName());
-        user.get().getRoles().add(role);
+        user.getRoles().add(role);
         logger.info(String.format(roleName, "%s has been added to %s", userName));
     }
 
     @Override
-    public List<User> getAllUsers() {
-        logger.info("Fetching all users");
+    public List<User> findAllUsers() {
+        logger.info("Fetching all users from UserServiceImpl class");
         return userRepository.findAll();
     }
 
     @Override
     public User getUserById(String id) {
         logger.info("Fetching user {} with id ", id);
-        User user = userRepository.findById(id).get();
-        return user;
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public User getUserByEmail(String emailId) {
-        logger.info("Fetching user {} with emailId ", emailId);
-        User user = userRepository.findByEmailId(emailId).get();
-        return user;
+        logger.info("Fetching user with emailId {}", emailId);
+        return userRepository.findByEmailId(emailId).orElse(null);
     }
 
     @Override
     public User getUserByUserName(String userName) {
         logger.info("Fetching user {} ", userName);
-        User user = userRepository.findByUserName(userName).get();
-        return user;
+        return userRepository.findByUserName(userName);
     }
 
-//    @Override
-//    public List<User> getAgentUsers(String agentId) {
-//        Agent agent = restTemplate.getForObject(agentUrl + agentId, Agent.class);
-//        logger.info("Fetching all users for an agent {} ", agent.getAgentName());
-//        return userRepository.findAllByAgentId(agentId);
-//    }
-//
-//    @Override
-//    public List<User> getCountryUsers(String countryCode) {
-//        logger.info("Fetching all users for {} ", countryCode);
-//        return userRepository.findAllByCountryCode(countryCode);
-//    }
+    @Override
+    public List<User> getAgentUsers(String agentId) throws Exception {
+        Agent agent = restTemplate.getForObject(agentUrl + agentId, Agent.class);
+        if (agent != null) {
+            logger.info("Fetching all users for an agent {} ", agent.getAgentName());
+            return userRepository.findAllByAgentId(agentId);
+        } else {
+            throw new Exception("No agent found");
+        }
+    }
+
+    @Override
+    public List<User> getCountryUsers(String countryCode) {
+        logger.info("Fetching all users for {} ", countryCode);
+        Query query = new Query();
+
+        query = (!StringUtils.isEmpty(countryCode)) ?
+                query.addCriteria(Criteria.where("countryCode").is(countryCode)) : query;
+
+        return userRepository.findAllByCountryCode(countryCode);
+    }
 
     @Override
     public Agent getAgentInformation(String id) {
@@ -110,4 +140,6 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+
 }

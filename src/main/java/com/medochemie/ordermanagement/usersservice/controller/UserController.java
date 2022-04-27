@@ -1,13 +1,10 @@
 package com.medochemie.ordermanagement.usersservice.controller;
 
-import com.medochemie.ordermanagement.usersservice.entity.Role;
 import com.medochemie.ordermanagement.usersservice.entity.User;
-import com.medochemie.ordermanagement.usersservice.repository.UserRepository;
 import com.medochemie.ordermanagement.usersservice.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,23 +20,19 @@ import java.util.Optional;
 @CrossOrigin("*")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<User>> getAllUsers() {
         log.info("Fetching all users from db");
-        return ResponseEntity.ok().body(userService.getAllUsers());
+        return ResponseEntity.ok().body(userService.findAllUsers());
     }
 
-//    @GetMapping("/list")
-//    public ResponseEntity<String> getAllUsers() {
-//        log.info("fetching all users");
-//        return ResponseEntity.ok().body("Fetching all users endpoint is reachable");
-//    }
 
     @GetMapping("/list/{id}")
     public ResponseEntity<User> getUser(@PathVariable String id) {
-        return ResponseEntity.ok().body(userService.getUserById(id));
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok().body(user);
     }
 
     @GetMapping("/list/user-name/{userName}")
