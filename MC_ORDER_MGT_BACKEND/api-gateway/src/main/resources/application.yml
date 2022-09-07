@@ -13,7 +13,7 @@ spring:
         - id: MC-COMPANY-SERVICE
           uri: lb://MC-COMPANY-SERVICE
           predicates:
-            - Path=/products/**
+            - Path=/api/v1/products/**
         - id: MC-COMPANY-SERVICE
           uri: lb://MC-COMPANY-SERVICE
           predicates:
@@ -21,7 +21,19 @@ spring:
         - id: MC-ORDER-SERVICE
           uri: lb://MC-ORDER-SERVICE
           predicates:
-            - Path=/orders/**
+            - Path=/api/v1/orders/**
+        - id: MC-USERS-SERVICE
+          uri: lb://MC-USERS-SERVICE
+          predicates:
+            - Path=/api/v1/users/**
+        - id: MC-USERS-SERVICE
+          uri: lb://MC-USERS-SERVICE
+          predicates:
+            - Path=/api/v1/roles/**
+        - id: MC-AGENT-SERVICE
+          uri: lb://MC-AGENT-SERVICE
+          predicates:
+            - Path=/api/v1/agents/**
 
 
 eureka:
